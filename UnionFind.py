@@ -1,5 +1,5 @@
 #nodes numbered 0...n-1
-root = [i for i in range(n]
+root = [i for i in range(n)]
 
 def find(x):
     if x!=root[x]:
