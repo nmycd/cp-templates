@@ -9,6 +9,11 @@ class BIT:
             self.tree[idx] += delta
             idx += idx & -idx
 
+    def set_value(self, index: int, new_value: int, source_array: list):
+        delta = new_value - source_array[index]
+        source_array[index] = new_value
+        self.update(index, delta)
+
     def query(self, index: int) -> int:
         idx = index + 1
         s = 0
