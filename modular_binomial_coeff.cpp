@@ -1,32 +1,36 @@
-long long MOD = (long long)(1e9+7);
-vector<vector<int>> ncr(nums.size() + 1, vector<int> (k + 1,0));
+const int MAXN = 1e6;
 
-ncr[0][0] = 1;
-for (int n = 1; n <= nums.size(); n++) {
-    ncr[n][0] = 1;
-    for (int r = 1; r <= k; r++) 
-        ncr[n][r] = (ncr[n - 1][r - 1] + ncr[n - 1][r]) % MOD;
-} 
+long long fac[MAXN + 1];
+long long inv[MAXN + 1];
 
+/** @return x^n modulo m in O(log p) time. */
+long long exp(long long x, long long n, long long m) {
+	x %= m;  // note: m * m must be less than 2^63 to avoid ll overflow
+	long long res = 1;
+	while (n > 0) {
+		if (n % 2 == 1) { res = res * x % m; }
+		x = x * x % m;
+		n /= 2;
+	}
+	return res;
+}
 
-/////////////////////////////////////////////////////////////////////////////////////////
-// https://cp-algorithms.com/algebra/module-inverse.html#mod-inv-all-num
+/** Precomputes n! from 0 to MAXN. */
+void factorial(long long p) {
+	fac[0] = 1;
+	for (int i = 1; i <= MAXN; i++) { fac[i] = fac[i - 1] * i % p; }
+}
 
- long long comb(long long a, long long b, long long mod) {
-        if (b > a) return 0;
-        long long numer = 1, denom = 1;
-        for (long long i = 0; i < b; ++i) {
-            numer = numer * (a - i) % mod;
-            denom = denom * (i + 1) % mod;
-        }
+/**
+ * Precomputes all modular inverse factorials
+ * from 0 to MAXN in O(n + log p) time
+ */
+void inverses(long long p) {
+	inv[MAXN] = exp(fac[MAXN], p - 2, p);
+	for (int i = MAXN; i >= 1; i--) { inv[i - 1] = inv[i] * i % p; }
+}
 
-        // Fermat's Little Theorem
-        long long denom_inv = 1;
-        long long exp = mod - 2;
-        while (exp) {
-            if (exp % 2) denom_inv = denom_inv * denom % mod;
-            denom = denom * denom % mod;
-            exp /= 2;
-        }
-        return numer * denom_inv % mod;
-    }
+/** @return nCr mod p */
+long long choose(long long n, long long r, long long p) {
+	return fac[n] * inv[r] % p * inv[n - r] % p;
+}
