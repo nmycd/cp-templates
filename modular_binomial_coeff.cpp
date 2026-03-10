@@ -34,3 +34,18 @@ void inverses(long long p) {
 long long choose(long long n, long long r, long long p) {
 	return fac[n] * inv[r] % p * inv[n - r] % p;
 }
+
+
+
+
+///// nonmodular single coefficient simple calc
+	/** @return n choose k, computed naively since the problem has no overflow */
+long long comb(int n, int k) {
+	if (k > n - k) { k = n - k; }
+	long long ret = 1;
+	for (int i = 0; i < k; i++) {
+		// this is done instead of *= for divisibility issues
+		ret = ret * (n - i) / (i + 1);
+	}
+	return ret;
+}
